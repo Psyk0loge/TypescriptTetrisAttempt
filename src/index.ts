@@ -3,9 +3,16 @@
  * When you're ready to start on your site, clear the file. Happy hacking!
  **/
 
-import confetti from 'canvas-confetti';
+const playerBlock = document.querySelector<HTMLDivElement>("#color-box")
 
-confetti.create(document.getElementById('canvas') as HTMLCanvasElement, {
-  resize: true,
-  useWorker: true,
-})({ particleCount: 200, spread: 200 });
+if(playerBlock != null){
+
+  console.log(playerBlock.offsetTop)
+  for(let i = 0; i<100; i++){
+    playerBlock.style.top +=1
+  }
+
+  
+}
+
+console.log("HI")
