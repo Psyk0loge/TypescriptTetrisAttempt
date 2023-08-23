@@ -1,18 +1,20 @@
-/**
- * This file is just a silly example to show everything working in the browser.
- * When you're ready to start on your site, clear the file. Happy hacking!
- **/
 
-const playerBlock = document.querySelector<HTMLDivElement>("#color-box")
+const ball = document.getElementById("ballID");
 
-if(playerBlock != null){
+var myVar = setInterval(spostaDiv, 90);
+var margin = 0;
 
-  console.log(playerBlock.offsetTop)
-  for(let i = 0; i<100; i++){
-    playerBlock.style.top +=1
+let l = window.screen.width;
+let w = 1300;
+
+function spostaDiv() {
+  if(ball != null){
+    console.log(w);
+    if (margin == w) {
+        margin = 0;
+    } else {
+        ball.style.marginLeft = margin + "px";
+    }
+    margin += 10;
   }
-
-  
 }
-
-console.log("HI")
