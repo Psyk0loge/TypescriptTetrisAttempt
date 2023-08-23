@@ -5,6 +5,17 @@
 
 const playerBlock = <HTMLDivElement>document.getElementById("ballID");
 
+let marginLeft = 0;
+let marginTop = 0;
+playerBlock.style.marginLeft = 0 + "px"
+playerBlock.style.marginTop = 0 + "px"
+
+function setup(){
+  //vllt ne funktion, die am Anfang alles auf 0 margin setztz...
+  playerBlock.style.marginLeft = 0 + "px"
+  playerBlock.style.marginTop = 0 + "px"
+}
+
 const directions = {
   Left : 'left',
   Right : 'right',
@@ -25,7 +36,7 @@ let margin = 0;
 let w = 980
 let l = window.screen.width
 //let myVar = setInterval(moveItems,10)
-function moveItems(direction : string){
+function moveItems(){
   console.log(playerBlock)
   if(playerBlock != null && playerBlock != undefined){
     console.log(w)
@@ -39,29 +50,23 @@ function moveItems(direction : string){
 }
 
 function playerControl(key : string){
-  const playerBlock = <HTMLDivElement>document.getElementById("ballID");
   if(playerBlock != null && playerBlock != undefined){
     switch(key) {
       case "ArrowUp":
-        var top = parseInt(playerBlock?.style.marginTop) + 10
-        playerBlock.style.marginTop = top + "px";
-        console.log("Up")
-        moveItems(directions.Up)
+        marginTop -= 10
+        playerBlock.style.marginTop = marginTop + "px";
         break
       case "ArrowDown":  
-        var top = parseInt(playerBlock?.style.marginTop) - 10
-        playerBlock.style.marginTop = top + "px";
-        console.log("Down")
+        marginTop += 10
+        playerBlock.style.marginTop = marginTop + "px";
         break
       case "ArrowLeft":  
-        var top = parseInt(playerBlock?.style.left) - 10
-        playerBlock.style.left = top + "px";
-        console.log("Left")
+        marginLeft -= 10
+        playerBlock.style.marginLeft = marginLeft + "px";
         break
       case "ArrowRight":  
-        var top = parseInt(playerBlock?.style.left) + 10
-        playerBlock.style.left = top + "px";
-        console.log("Right")
+        marginLeft += 10
+        playerBlock.style.marginLeft = marginLeft + "px";
         break
       }
   }
