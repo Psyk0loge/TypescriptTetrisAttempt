@@ -58,23 +58,31 @@ class PlayField{
         }
     }
 
+    checkCollision(x: number, y: number): boolean{
+        if(this._playFieldArray[x][y+1]== undefined){
+            return true;
+        }
+        return this._playFieldArray[x][y+1].isFieldFree();
+    }
+
     removeChildrenElements(element: HTMLElement) {
         while (element.firstChild) {
           element.removeChild(element.firstChild);
         }
-      }
+    }
 
-    setFieldColor(x: number, y: number){
-        const playFieldToChange: PlayFieldBlock = this._playFieldArray[x][y] 
-        playFieldToChange.setFieldColor("blue")
-        const playField = document.getElementById("playField")
-        if(playField != null && playField != undefined){
-          this.removeChildrenElements(playField)
+    setFieldColor(x: number, y: number, color: string){
+        console.log(this.checkCollision(x,y))
+        if (!this.checkCollision(x,y)){
+            this._playFieldArray[x][y].setFieldColor(color) 
+            const playField = document.getElementById("playField")
+            if(playField != null && playField != undefined){
+              this.removeChildrenElements(playField)
+            }
+            this.printPlayField()
+            console.log("Printed: "+ `${x},${y}`)
         }
-        this.printPlayField()
-        console.log("Printed: "+ `${x},${y}`)
-      }
-  
+    }
 }
 
 export { PlayField };

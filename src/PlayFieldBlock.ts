@@ -21,7 +21,7 @@ class PlayFieldBlock {
     this._isFieldTaken = false;
   }
 
-  public getFieldIsTakenStatus(){
+  public isFieldFree(){
     return this._isFieldTaken;
   }
 

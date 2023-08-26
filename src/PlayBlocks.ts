@@ -11,14 +11,14 @@ class PlayBlocks{
     ]
 
     private _controlls: Controlls
-    private _blockPositions: number[][]
+    public blockPositions: number[][]
 
     constructor(controlls: Controlls){
         this._controlls = controlls
-        this._blockPositions = PlayBlocks.blockTypes[getRandomInt(4)]
-        this._controlls.setFieldColor(this._blockPositions)
+        this.blockPositions = PlayBlocks.blockTypes[getRandomInt(4)]
+        this._controlls.setFieldColor(this.blockPositions)
     }
-    
+
 }
 export namespace BlockTypeValues{
     enum BlockTypeValues{

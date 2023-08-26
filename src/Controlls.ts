@@ -1,5 +1,6 @@
 import {PlayField} from "./PlayField"
 import { getRandomInt } from "./GetRandomNumber";
+import { PlayBlocks } from "./PlayBlocks";
 
 class Controlls{
     private readonly _playField: PlayField;
@@ -9,6 +10,7 @@ class Controlls{
         Up : 'up',
         Down : 'down',
     }
+    private _currentPlayBlock?: PlayBlocks
 
     playerBlockControl(key : string){
         // if(playerBlock != null && playerBlock != undefined){
@@ -45,7 +47,18 @@ class Controlls{
     
     constructor(playField: PlayField){
         this._playField = playField;
-        window.addEventListener("keydown", e => this.playerControl(e.key))
+        //window.addEventListener("keydown", e => this.playerControl(e.key))
+    }
+
+    createNewPlayBlock(){
+        this._currentPlayBlock = new PlayBlocks(this)
+    }
+
+    playBlockExists(){
+        if(this._currentPlayBlock == undefined){
+            return false;
+        }
+        return true;
     }
 
     setFieldColor(blockPositions: number[][]){
@@ -53,12 +66,36 @@ class Controlls{
         // for(let blockPosition in blockPositions)
         // this._playField.setFieldColor(blockPositions[blockPosition][0],blockPositions[blockPosition][1])
         for(let blockPosition of blockPositions)
-        this._playField.setFieldColor(blockPosition[0],blockPosition[1])
+        this._playField.setFieldColor(blockPosition[0],blockPosition[1], "blue")
     }
 
-    playerControl(key : string){
-        this._playField.setFieldColor(getRandomInt(this._playField.TETRIS_FIELD_SIZE_X), getRandomInt(this._playField.TETRIS_FIELD_SIZE_Y))
+    //Todo: hier muss irgendwie irgendwas anders sein
+    checkColision(): boolean{
+        if(this._currentPlayBlock != null){
+            this._currentPlayBlock.blockPositions
+            return this._playField.checkCollision(x,y)
+        }
     }
+
+    cleanFieldColor(blockPositions: number[][]){
+        //a neat thing I learned from chatGPT
+        // for(let blockPosition in blockPositions)
+        // this._playField.setFieldColor(blockPositions[blockPosition][0],blockPositions[blockPosition][1])
+        for(let blockPosition of blockPositions)
+        this._playField.setFieldColor(blockPosition[0],blockPosition[1], "black")
+    }
+
+    fall(block: Play){
+        
+    }
+
+    turn(){
+
+    }
+
+    // playerControl(key : string){
+    //     this._playField.setFieldColor(getRandomInt(this._playField.TETRIS_FIELD_SIZE_X), getRandomInt(this._playField.TETRIS_FIELD_SIZE_Y))
+    // }
 
 }
 export { Controlls };

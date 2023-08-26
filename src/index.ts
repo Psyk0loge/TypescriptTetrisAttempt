@@ -4,25 +4,27 @@
  **/
 import {PlayField} from "./PlayField"
 import {Controlls} from "./Controlls"
-import { PlayBlocks } from "./PlayBlocks";
+//import { PlayBlocks } from "./PlayBlocks";
 
 //const PlayerBlock? = <HTMLDivElement>document.getElementById("ballID");
 
 let playField = new PlayField(10,20,50);
 let playControlls = new Controlls(playField);
-let currentPlayBlock: PlayBlocks
+let playSpeed = 750
 
 
 function setupGame(){
   playField.createPlayField()
   gameLoop()
+  setInterval(gameLoop, playSpeed)
 }
 
 function gameLoop(){
-  if(currentPlayBlock == undefined){
-    currentPlayBlock = new PlayBlocks(playControlls)
+  if(playControlls.playBlockExists()){
+    playControlls.createNewPlayBlock()
   }
-  
+  playControlls.checkColision()
+
   //mit jedem ticken muss der PlayBlock eins runter gehen...
   //setInterval()
 }
