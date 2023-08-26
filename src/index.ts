@@ -3,59 +3,26 @@
  * When you're ready to start on your site, clear the file. Happy hacking!
  **/
 
-//const playerBlock? = <HTMLDivElement>document.getElementById("ballID");
+import {PlayFieldBlock} from "./PlayFieldBlock"
+
+//const PlayerBlock? = <HTMLDivElement>document.getElementById("ballID");
 
 const TETRIS_FIELD_SIZE_X = 10;
 const TETRIS_FIELD_SIZE_Y = 20;
 const DEFAULT_FIELD_BLOCK_SIZE = 50;
 
-class playFieldBlock {
-  private _isFieldTaken = false;
-  //Todo: check if this is the best datatype
-  //Todo: check if this thing with optional parameter is actually working like this
-  private _color: string = "black";
 
-  public constructor(isBlockPlaced?: boolean, color?: string){
-    if(typeof isBlockPlaced !== 'undefined'){
-      this._isFieldTaken = isBlockPlaced;
-    }
-    if(typeof color !== 'undefined'){
-      this._color = color;
-    }
-  }
-
-  public setFieldToTaken() {
-    this._isFieldTaken = true;
-  }
-
-  public setFieldToUntaken() {
-    this._isFieldTaken = false;
-  }
-
-  public getFieldIsTakenStatus(){
-    return this._isFieldTaken;
-  }
-
-  public getFieldColor(){
-    return this._color;
-  }
-
-  public setFieldColor(color: string){
-    this._color=color;
-  }
-
-}
 
 //the array will always be created with 4 more unvisible blocks in the height
-function initializeEmptyPlayField(width: number, height: number): playFieldBlock[][]{
-  const playFieldArray: playFieldBlock[][] = Array.from({ length: width }, () =>
-    Array.from({ length: height }, () => new playFieldBlock())
+function initializeEmptyPlayField(width: number, height: number): PlayFieldBlock[][]{
+  const playFieldArray: PlayFieldBlock[][] = Array.from({ length: width }, () =>
+    Array.from({ length: height }, () => new PlayFieldBlock())
   );
 
   return playFieldArray;
 }
 
-function printPlayField(playFieldArray: playFieldBlock[][]){
+function printPlayField(playFieldArray: PlayFieldBlock[][]){
   const playField = document.getElementById("playField")
   for(let x = 0; x<TETRIS_FIELD_SIZE_X; x++ ){
     const playFieldColumn = document.createElement("div")
@@ -66,7 +33,7 @@ function printPlayField(playFieldArray: playFieldBlock[][]){
     for(let y = 0; y<TETRIS_FIELD_SIZE_Y; y++){
       const playFieldBlockHtml = document.createElement("div")
       playFieldBlockHtml?.setAttribute("id", `${x}-${y}`)
-      const fieldParameters: playFieldBlock = playFieldArray[x][y]
+      const fieldParameters: PlayFieldBlock = playFieldArray[x][y]
       playFieldBlockHtml.style.backgroundColor = fieldParameters.getFieldColor();
       playFieldBlockHtml.style.width = DEFAULT_FIELD_BLOCK_SIZE + "px"
       playFieldBlockHtml.style.height = DEFAULT_FIELD_BLOCK_SIZE + "px"
@@ -77,16 +44,21 @@ function printPlayField(playFieldArray: playFieldBlock[][]){
   }
 }
 
-function setFieldColor(x: number, y: number, playFieldArray: playFieldBlock[][]){
-  const playFieldToChange: playFieldBlock = playFieldArray[x][y] 
-  playFieldToChange.setFieldColor("blue")
-  let changeBlock = document.getElementById(`${x}-${y}`)
-  if (changeBlock) {
-    changeBlock.style.backgroundColor = "blue";
-    console.log("Background color changed to blue");
-  } else {
-    console.log(`Element ${x}-${y} not found`);
+function removeChildrenElements(element: HTMLElement) {
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
   }
+}
+
+function setFieldColor(x: number, y: number, playFieldArray: PlayFieldBlock[][]){
+  const playFieldToChange: PlayFieldBlock = playFieldArray[x][y] 
+  playFieldToChange.setFieldColor("blue")
+  const playField = document.getElementById("playField")
+  if(playField != null && playField != undefined){
+    removeChildrenElements(playField)
+  }
+  printPlayField(playFieldArray)
+  console.log("Printed: "+ `${x},${y}`)
 }
 
 function createPlayField(){
@@ -110,12 +82,24 @@ function setupGame(){
   gameLoop(playFieldArray)
 }
 
-function gameLoop(playFieldArray: playFieldBlock[][]){
+function gameLoop(playFieldArray: PlayFieldBlock[][]){
   printPlayField(playFieldArray);
   setFieldColor(0, 11, playFieldArray)
+  function playerControl(key : string){
+    function getRandomInt(max: number) {
+      return Math.floor(Math.random() * max);
+    }
+  
+    setFieldColor(getRandomInt(TETRIS_FIELD_SIZE_X), getRandomInt(TETRIS_FIELD_SIZE_Y), playFieldArray)
+  
+  }
+  
+  window.addEventListener("keydown", e => playerControl(e.key))
 }
 
 setupGame();
+
+
 
 const directions = {
   Left : 'left',
