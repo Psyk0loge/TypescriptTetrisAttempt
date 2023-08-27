@@ -67,7 +67,7 @@ class Controlls{
         return true;
     }
 
-    
+    //not working correctly things can go into each other...
     checkColision(): boolean{
         if(this._currentPlayBlock != null){
             let checkPosition = this._currentPlayBlock.getLowestBlockPosition()
