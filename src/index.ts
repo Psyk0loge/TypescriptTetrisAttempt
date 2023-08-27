@@ -25,13 +25,14 @@ function gameLoop(){
     playControlls.createNewPlayBlock()
   }
   console.log("now checking for colision")
-  if(!playControlls.checkColision()){
+  if(!playControlls.checkCollisionDown()){
     console.log("start falling")
     playControlls.fall()
   } else {
     // das machen was passieren soll wenn andockt...
     playControlls.createNewPlayBlock()
     //Punkte Zählen...
+
   }
 
   //mit jedem ticken muss der PlayBlock eins runter gehen...

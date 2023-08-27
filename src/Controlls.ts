@@ -12,28 +12,23 @@ class Controlls{
         Down : 'down',
     }
     
+
     private _currentPlayBlock?: PlayBlocks
 
     playerBlockControl(key : string){
         console.log(`recieved input from key: ${key}`)
-        // if(playerBlock != null && playerBlock != undefined){
-        //   switch(key) {
-        //     case "ArrowUp":
-        //       marginTop -= 10
-        //       playerBlock.style.marginTop = marginTop + "px";
-        //       break
-        //     case "ArrowDown":  
-        //       marginTop += 10
-        //       playerBlock.style.marginTop = marginTop + "px";
-        //       break
-        //     case "ArrowLeft":  
-        //       marginLeft -= 10
-        //       playerBlock.style.marginLeft = marginLeft + "px";
-        //       break
-        //     case "ArrowRight":  
-        //       marginLeft += 10
-        //       playerBlock.style.marginLeft = marginLeft + "px";
-        //       break
+        switch(key) {
+        case "ArrowDown":  
+            if(!this.checkCollisionDown()){
+                this.fall()
+            }
+            break
+        case "ArrowLeft":  
+
+            break
+        case "ArrowRight":  
+            break
+        }
     }
 
     getFieldSize_X():number {
@@ -50,14 +45,11 @@ class Controlls{
     
     constructor(playField: PlayField){
         this._playField = playField;
-        //window.addEventListener("keydown", e => this.playerControl(e.key))
+        window.addEventListener("keydown", e => this.playerBlockControl(e.key))
     }
 
     createNewPlayBlock(){
         this._currentPlayBlock = new PlayBlocks()
-        // this._currentPlayBlock.pop()
-        // this._currentPlayBlock.push(new PlayBlocks()) 
-        // //this.blockField(this._currentPlayBlock.blockPositions)
     }
 
     playBlockExists(){
@@ -68,7 +60,23 @@ class Controlls{
     }
 
     
-    checkColision(): boolean{
+    checkCollisionDown(): boolean{
+        if(this._currentPlayBlock != null){
+            let checkPosition = this._currentPlayBlock.getLowestBlockPosition()
+            for(let block of checkPosition){
+                if(this._playField.checkCollisionDown(block[0], block[1])){
+                    return true
+                }
+            }
+            return false
+            //console.log(this._playField.checkCollisionDown(checkPosition[0],checkPosition[1]))
+        }
+        //if no playblock exists this should lateron create a new one...
+        console.log("collison = true")
+        return true;
+    }
+
+    checkCollisionLeft(): boolean{
         if(this._currentPlayBlock != null){
             let checkPosition = this._currentPlayBlock.getLowestBlockPosition()
             for(let block of checkPosition){
@@ -119,10 +127,6 @@ class Controlls{
 
     // turn(){
 
-    // }
-
-    // playerControl(key : string){
-    //     this._playField.setFieldColor(getRandomInt(this._playField.TETRIS_FIELD_SIZE_X), getRandomInt(this._playField.TETRIS_FIELD_SIZE_Y))
     // }
 
 }

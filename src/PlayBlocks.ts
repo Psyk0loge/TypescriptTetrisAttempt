@@ -51,32 +51,7 @@ class PlayBlocks {
     return array.filter((value, index) => array.indexOf(value) === index);
   }
 
-  // muss überarbeitet werden
-  //   getLowestBlockPosition(): number[][] {
-  //     //give me all x values
-  //     let xValues = this.blockPositions.filter(x => x[0])
-  //     let uniqueXValues = this.uniqByFilter(xValues)
-  //     for(let i of uniqueXValues){
-  //         let currentLowestBlockY = 0;
-  //         let yValues = this.blockPositions.filter
-  //         for (let blockPosition of this.blockPositions) {
-  //           if (blockPosition[1] > currentLowerstBlockPosition[1]) {
-  //             currentLowerstBlockPosition = blockPosition;
-  //           }
-  //         }
-
-  //     }
-
-  //     //remove duplicates
-  //     //uniqueXValues.map()
-  //     if (this.unChecked) {
-  //       console.log(
-  //         `x: ${currentLowerstBlockPosition[0]} y: ${currentLowerstBlockPosition[1]}`,
-  //       );
-  //       this.unChecked = false;
-  //     }
-  //     return currentLowerstBlockPosition;
-  //   }
+  //die muss ich noch nachvollziehen...
   getLowestBlockPosition(): number[][] {
     const highestValuesMap: Record<number, number> = {};
 
@@ -97,7 +72,15 @@ class PlayBlocks {
 
     return resultArray;
   }
+
+  getLeftBlocksToCheck(): number[][]{
+    let currentLowest_X = 999999
+    this.blockPositions.map(x => x[0])
+    return this.blockPositions.filter(x =>x[0] == currentLowest_X )
+  }
+
 }
+
 export namespace BlockTypeValues{
     enum BlockTypeValues{
         LONG = 0,
