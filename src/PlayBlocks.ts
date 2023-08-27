@@ -3,7 +3,7 @@ import { getRandomInt } from "./GetRandomNumber";
 class PlayBlocks {
     //finally found the bug.. since this is static it only exists once meaning that only 4 things can be created in total
     //and ...
-  public static blockTypes = [
+  public blockTypes = [
     [
       [4, 0],
       [4, 1],
@@ -40,7 +40,11 @@ class PlayBlocks {
   private unChecked = true;
 
   constructor() {
-    this.blockPositions = PlayBlocks.blockTypes[getRandomInt(4)];
+    this.blockPositions = this.deepCopyArray(getRandomInt(4));
+  }
+
+  deepCopyArray(index: number): number[][]{
+    return this.blockTypes[index].map(x => x)
   }
 
   getLowestBlockPosition(): number[] {

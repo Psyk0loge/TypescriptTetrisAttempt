@@ -12,7 +12,7 @@ class Controlls{
         Down : 'down',
     }
     
-    private _currentPlayBlock: PlayBlocks[] = [new PlayBlocks]
+    private _currentPlayBlock?: PlayBlocks
 
     playerBlockControl(key : string){
         console.log(`recieved input from key: ${key}`)
@@ -54,10 +54,10 @@ class Controlls{
     }
 
     createNewPlayBlock(){
-        //this._currentPlayBlock = undefined
-        this._currentPlayBlock.pop()
-        this._currentPlayBlock.push(new PlayBlocks()) 
-        //this.blockField(this._currentPlayBlock.blockPositions)
+        this._currentPlayBlock = new PlayBlocks()
+        // this._currentPlayBlock.pop()
+        // this._currentPlayBlock.push(new PlayBlocks()) 
+        // //this.blockField(this._currentPlayBlock.blockPositions)
     }
 
     playBlockExists(){
@@ -70,7 +70,7 @@ class Controlls{
     
     checkColision(): boolean{
         if(this._currentPlayBlock != null){
-            let checkPosition = this._currentPlayBlock[0].getLowestBlockPosition()
+            let checkPosition = this._currentPlayBlock.getLowestBlockPosition()
             console.log(this._playField.checkCollisionDown(checkPosition[0],checkPosition[1]))
             return this._playField.checkCollisionDown(checkPosition[0],checkPosition[1])
         }
@@ -96,11 +96,11 @@ class Controlls{
 
     fall(){
         if(this._currentPlayBlock != null && this._currentPlayBlock != undefined){
-            this.freeField(this._currentPlayBlock[0].blockPositions)
-            for(let blockPosition of this._currentPlayBlock[0].blockPositions){
+            this.freeField(this._currentPlayBlock.blockPositions)
+            for(let blockPosition of this._currentPlayBlock.blockPositions){
                 blockPosition[1] = blockPosition[1] + 1
             }
-            this.blockField(this._currentPlayBlock[0].blockPositions)
+            this.blockField(this._currentPlayBlock.blockPositions)
         }
     }
 
