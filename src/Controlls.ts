@@ -71,8 +71,13 @@ class Controlls{
     checkColision(): boolean{
         if(this._currentPlayBlock != null){
             let checkPosition = this._currentPlayBlock.getLowestBlockPosition()
-            console.log(this._playField.checkCollisionDown(checkPosition[0],checkPosition[1]))
-            return this._playField.checkCollisionDown(checkPosition[0],checkPosition[1])
+            for(let block of checkPosition){
+                if(this._playField.checkCollisionDown(block[0], block[1])){
+                    return true
+                }
+            }
+            return false
+            //console.log(this._playField.checkCollisionDown(checkPosition[0],checkPosition[1]))
         }
         //if no playblock exists this should lateron create a new one...
         console.log("collison = true")

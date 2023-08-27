@@ -1,8 +1,8 @@
 import { getRandomInt } from "./GetRandomNumber";
 
 class PlayBlocks {
-    //finally found the bug.. since this is static it only exists once meaning that only 4 things can be created in total
-    //and ...
+  //finally found the bug.. since this is static it only exists once meaning that only 4 things can be created in total
+  //and ...
   public blockTypes = [
     [
       [4, 0],
@@ -43,27 +43,60 @@ class PlayBlocks {
     this.blockPositions = this.deepCopyArray(getRandomInt(4));
   }
 
-  deepCopyArray(index: number): number[][]{
-    return this.blockTypes[index].map(x => x)
+  deepCopyArray(index: number): number[][] {
+    return this.blockTypes[index].map((x) => x);
   }
 
-  getLowestBlockPosition(): number[] {
-    let currentLowerstBlockPosition = [0, 0];
-    for (let blockPosition of this.blockPositions) {
-      if (blockPosition[1] > currentLowerstBlockPosition[1]) {
-        currentLowerstBlockPosition = blockPosition;
+  uniqByFilter<T>(array: T[]) {
+    return array.filter((value, index) => array.indexOf(value) === index);
+  }
+
+  // muss überarbeitet werden
+  //   getLowestBlockPosition(): number[][] {
+  //     //give me all x values
+  //     let xValues = this.blockPositions.filter(x => x[0])
+  //     let uniqueXValues = this.uniqByFilter(xValues)
+  //     for(let i of uniqueXValues){
+  //         let currentLowestBlockY = 0;
+  //         let yValues = this.blockPositions.filter
+  //         for (let blockPosition of this.blockPositions) {
+  //           if (blockPosition[1] > currentLowerstBlockPosition[1]) {
+  //             currentLowerstBlockPosition = blockPosition;
+  //           }
+  //         }
+
+  //     }
+
+  //     //remove duplicates
+  //     //uniqueXValues.map()
+  //     if (this.unChecked) {
+  //       console.log(
+  //         `x: ${currentLowerstBlockPosition[0]} y: ${currentLowerstBlockPosition[1]}`,
+  //       );
+  //       this.unChecked = false;
+  //     }
+  //     return currentLowerstBlockPosition;
+  //   }
+  getLowestBlockPosition(): number[][] {
+    const highestValuesMap: Record<number, number> = {};
+
+    for (const [index0, index1] of this.blockPositions) {
+      if (
+        highestValuesMap[index0] === undefined ||
+        index1 > highestValuesMap[index0]
+      ) {
+        highestValuesMap[index0] = index1;
       }
     }
-    if (this.unChecked) {
-      console.log(
-        `x: ${currentLowerstBlockPosition[0]} y: ${currentLowerstBlockPosition[1]}`,
-      );
-      this.unChecked = false;
-    }
-    return currentLowerstBlockPosition;
-  }
 
-  
+    const resultArray: number[][] = [];
+    for (const index0 in highestValuesMap) {
+      const index1 = highestValuesMap[index0];
+      resultArray.push([Number(index0), index1]);
+    }
+
+    return resultArray;
+  }
 }
 export namespace BlockTypeValues{
     enum BlockTypeValues{
