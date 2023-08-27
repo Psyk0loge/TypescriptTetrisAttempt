@@ -35,7 +35,7 @@ class PlayField{
         container?.appendChild(playFieldMainDiv);
     }
 
-
+    //Todo: irgendwann mal ändern das der nicht irgendwie die ersten 3 nicht printed...
     printPlayField(){
         const playField = document.getElementById("playField")
         for(let x = 0; x<this.TETRIS_FIELD_SIZE_X; x++ ){
@@ -58,11 +58,29 @@ class PlayField{
         }
     }
 
-    checkCollision(x: number, y: number): boolean{
-        if(this._playFieldArray[x][y+1]== undefined){
+    private checkCollision(x: number, y: number): boolean{
+        if(this._playFieldArray[x][y] == undefined){
+            console.log(`checking on field: ${x}-${y}`)
             return true;
+        }else{
+            console.log(`checking on field: ${x}-${y}`)
+            return this._playFieldArray[x][y].isFieldFree()
         }
-        return this._playFieldArray[x][y+1].isFieldFree();
+    }
+
+    checkCollisionDown(x: number, y: number): boolean{
+        y = y + 1
+        return this.checkCollision(x,y)
+    }
+
+    checkCollisionLeft(x: number, y: number): boolean{
+        x = x - 1
+        return this.checkCollision(x,y)
+    }
+
+    checkCollisionRight(x: number, y: number): boolean{
+        x = x + 1
+        return this.checkCollision(x,y)
     }
 
     removeChildrenElements(element: HTMLElement) {
@@ -71,18 +89,29 @@ class PlayField{
         }
     }
 
-    setFieldColor(x: number, y: number, color: string){
-        console.log(this.checkCollision(x,y))
-        if (!this.checkCollision(x,y)){
-            this._playFieldArray[x][y].setFieldColor(color) 
-            const playField = document.getElementById("playField")
-            if(playField != null && playField != undefined){
-              this.removeChildrenElements(playField)
-            }
-            this.printPlayField()
-            console.log("Printed: "+ `${x},${y}`)
-        }
+    setFieldToTaken(x: number, y: number){
+        this._playFieldArray[x][y].setTaken()
+        this.renewPlayField()
     }
+
+    setFieldToFree(x: number, y: number){
+        this._playFieldArray[x][y].setFree()
+        this.renewPlayField()
+    }
+
+    renewPlayField(){
+        const playField = document.getElementById("playField")
+        if(playField != null && playField != undefined){
+            this.removeChildrenElements(playField)
+        }
+        this.printPlayField()
+        //console.log("Printed: "+ `${x},${y}`)
+    }
+
+    // setFieldColor(x: number, y: number, color: string){
+    //     this._playFieldArray[x][y].setFieldColor(color)
+    //     
+    // }
 }
 
 export { PlayField };

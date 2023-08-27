@@ -14,16 +14,25 @@ let playSpeed = 750
 
 
 function setupGame(){
+  console.log("game started")
   playField.createPlayField()
   gameLoop()
   setInterval(gameLoop, playSpeed)
 }
 
 function gameLoop(){
-  if(playControlls.playBlockExists()){
+  if(!playControlls.playBlockExists()){
     playControlls.createNewPlayBlock()
   }
-  playControlls.checkColision()
+  console.log("now checking for colision")
+  if(!playControlls.checkColision()){
+    console.log("start falling")
+    playControlls.fall()
+  } else {
+    // das machen was passieren soll wenn andockt...
+    playControlls.createNewPlayBlock()
+    //Punkte Zählen...
+  }
 
   //mit jedem ticken muss der PlayBlock eins runter gehen...
   //setInterval()
