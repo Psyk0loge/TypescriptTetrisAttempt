@@ -1,3 +1,4 @@
+import { PlayBlocks } from "./PlayBlocks";
 import {PlayFieldBlock} from "./PlayFieldBlock"
 
 class PlayField{
@@ -63,8 +64,8 @@ class PlayField{
             console.log(`checking on field: ${x}-${y}`)
             return true;
         }else{
-            console.log(`checking on field: ${x}-${y}`)
-            return this._playFieldArray[x][y].isFieldFree()
+            console.log(`checking on field: ${x}-${y} the field is ${this._playFieldArray[x][y].isFieldTaken()}`)
+            return this._playFieldArray[x][y].isFieldTaken()
         }
     }
 
@@ -73,9 +74,20 @@ class PlayField{
         return this.checkCollision(x,y)
     }
 
-    checkCollisionLeft(x: number, y: number): boolean{
-        x = x - 1
-        return this.checkCollision(x,y)
+    checkCollisionLeft(blocks : PlayBlocks): boolean{
+        //get relevant blocks
+        //add + 1 von x value
+        let collision = false
+        for(let checkBlockLeft of blocks.getLeftBlocksToCheck()){
+            checkBlockLeft[0] = checkBlockLeft[0] + 1
+            if(this.checkCollision(checkBlockLeft[0],checkBlockLeft[1])){
+                collision = true
+                console.log("left collision detected")
+            }else{
+                console.log("no left collision detected")
+            }
+        }
+        return collision
     }
 
     checkCollisionRight(x: number, y: number): boolean{

@@ -24,7 +24,9 @@ class Controlls{
             }
             break
         case "ArrowLeft":  
-
+            if(!this.checkCollisionLeft()){
+                this.moveLeft()
+            }
             break
         case "ArrowRight":  
             break
@@ -78,14 +80,8 @@ class Controlls{
 
     checkCollisionLeft(): boolean{
         if(this._currentPlayBlock != null){
-            let checkPosition = this._currentPlayBlock.getLowestBlockPosition()
-            for(let block of checkPosition){
-                if(this._playField.checkCollisionDown(block[0], block[1])){
-                    return true
-                }
-            }
-            return false
-            //console.log(this._playField.checkCollisionDown(checkPosition[0],checkPosition[1]))
+            console.log("checking for colision left controller")
+            return this._playField.checkCollisionLeft(this._currentPlayBlock)
         }
         //if no playblock exists this should lateron create a new one...
         console.log("collison = true")
@@ -118,7 +114,13 @@ class Controlls{
     }
 
     moveLeft() {
-
+        if(this._currentPlayBlock != null && this._currentPlayBlock != undefined){
+            this.freeField(this._currentPlayBlock.blockPositions)
+            for(let blockPosition of this._currentPlayBlock.blockPositions){
+                blockPosition[0] = blockPosition[0] + 1
+            }
+            this.blockField(this._currentPlayBlock.blockPositions)
+        }
     }
   
     moveRight() {}

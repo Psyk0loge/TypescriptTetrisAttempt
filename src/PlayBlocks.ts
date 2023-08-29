@@ -1,6 +1,6 @@
 import { getRandomInt } from "./GetRandomNumber";
 
-class PlayBlocks {
+class PlayBlock {
   //finally found the bug.. since this is static it only exists once meaning that only 4 things can be created in total
   //and ...
   public blockTypes = [
@@ -73,11 +73,19 @@ class PlayBlocks {
     return resultArray;
   }
 
-  getLeftBlocksToCheck(): number[][]{
-    let currentLowest_X = 999999
-    this.blockPositions.map(x => x[0])
-    return this.blockPositions.filter(x =>x[0] == currentLowest_X )
-  }
+  getLeftBlocksToCheck(): number[][] {
+    const lowestIndex0Value = Math.min(...this.blockPositions.map(([index0]) => index0));
+
+    const resultArray: number[][] = [];
+    //here the deconstructing leads to: 
+    for (const [index0, index1] of this.blockPositions) {
+        if (index0 === lowestIndex0Value) {
+            resultArray.push([index0, index1]);
+        }
+    }
+
+    return resultArray;
+}
 
 }
 
@@ -94,4 +102,4 @@ export namespace BlockTypeValues{
 
 
 
-export {PlayBlocks}
+export {PlayBlock as PlayBlocks}
