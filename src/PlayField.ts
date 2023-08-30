@@ -22,6 +22,10 @@ class PlayField{
         return playFieldArray;
     }
 
+    public getArraySize():number[]{
+        return [this.TETRIS_FIELD_SIZE_X, this.TETRIS_FIELD_SIZE_Y]
+    }
+
     createPlayField(){
         let playFieldMainDiv = document.createElement("div")
         let windowWidth = this.TETRIS_FIELD_SIZE_X * this.DEFAULT_FIELD_BLOCK_SIZE
@@ -65,6 +69,7 @@ class PlayField{
             return true;
         }else{
             console.log(`checking on field: ${x}-${y} the field is ${this._playFieldArray[x][y].isFieldTaken()}`)
+            //create a method that check if a field exists and than gives back the 
             return this._playFieldArray[x][y].isFieldTaken()
         }
     }
@@ -79,7 +84,7 @@ class PlayField{
         //add + 1 von x value
         let collision = false
         for(let checkBlockLeft of blocks.getLeftBlocksToCheck()){
-            checkBlockLeft[0] = checkBlockLeft[0] + 1
+            checkBlockLeft[0] = checkBlockLeft[0] - 1
             if(this.checkCollision(checkBlockLeft[0],checkBlockLeft[1])){
                 collision = true
                 console.log("left collision detected")
