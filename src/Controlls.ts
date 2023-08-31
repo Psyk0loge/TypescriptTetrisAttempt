@@ -61,19 +61,6 @@ class Controlls{
         return true;
     }
 
-    checkIfFieldExists(field: PlayBlocks): boolean{
-        if(this._playField != null && this._playField != undefined){
-            let size = this._playField.getArraySize()
-            //here we need the leftest Blocks... 
-            //but it is implemented somewhere else...
-            //think about where it makes sence most..
-            // if(PlayBlocks.){
-
-            // }
-        }
-    }
-
-    
     checkCollisionDown(): boolean{
         if(this._currentPlayBlock != null){
             let checkPosition = this._currentPlayBlock.getLowestBlockPosition()
@@ -93,19 +80,11 @@ class Controlls{
     checkCollisionLeft(): boolean{
         if(this._currentPlayBlock != null){
             console.log("checking for colision left controller")
-            if(this.checkIfFieldExists(this._currentPlayBlock)){
-                return this._playField.checkCollisionLeft(this._currentPlayBlock)
-            }
+            return this._playField.checkCollisionLeft(this._currentPlayBlock)
         }
         //if no playblock exists this should lateron create a new one...
         console.log("collison = true")
         return true;
-    }
-
-    checkIfPlayFieldIsBigEnough():boolean{
-        // if(sizes[0] < ){
-
-        // }
     }
 
     blockField(blockPositions: number[][]){

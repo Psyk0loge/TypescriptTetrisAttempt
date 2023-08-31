@@ -79,17 +79,25 @@ class PlayField{
         return this.checkCollision(x,y)
     }
 
+    checkIfFieldExists(numberToCheck: number): boolean{
+        return ((numberToCheck >= 0) && (numberToCheck <= this.TETRIS_FIELD_SIZE_X))
+    }
+
     checkCollisionLeft(blocks : PlayBlocks): boolean{
         //get relevant blocks
         //add + 1 von x value
         let collision = false
         for(let checkBlockLeft of blocks.getLeftBlocksToCheck()){
             checkBlockLeft[0] = checkBlockLeft[0] - 1
-            if(this.checkCollision(checkBlockLeft[0],checkBlockLeft[1])){
-                collision = true
-                console.log("left collision detected")
+            if(this.checkIfFieldExists(checkBlockLeft[0])){
+                if(this.checkCollision(checkBlockLeft[0],checkBlockLeft[1])){
+                    console.log("left collision detected")
+                    collision = true;
+                }else{
+                    console.log("no left collision detected")
+                }
             }else{
-                console.log("no left collision detected")
+                return true
             }
         }
         return collision
