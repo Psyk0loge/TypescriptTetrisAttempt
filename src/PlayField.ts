@@ -103,9 +103,24 @@ class PlayField{
         return collision
     }
 
-    checkCollisionRight(x: number, y: number): boolean{
-        x = x + 1
-        return this.checkCollision(x,y)
+    checkCollisionRight(blocks : PlayBlocks): boolean{
+        let collision = false
+        //get right blocks to check
+        for(let checkBlockLeft of blocks.getRightBlocksToCheck()){
+            //add + 1
+            checkBlockLeft[0] = checkBlockLeft[0] + 1
+            if(this.checkIfFieldExists(checkBlockLeft[0])){
+                if(this.checkCollision(checkBlockLeft[0],checkBlockLeft[1])){
+                    console.log("left collision detected")
+                    collision = true;
+                }else{
+                    console.log("no left collision detected")
+                }
+            }else{
+                return true
+            }
+        }
+        return collision
     }
 
     removeChildrenElements(element: HTMLElement) {

@@ -86,6 +86,19 @@ class PlayBlock {
 
     return resultArray;
 }
+getRightBlocksToCheck(): number[][] {
+  const lowestIndex0Value = Math.max(...this.blockPositions.map(([index0]) => index0));
+
+  const resultArray: number[][] = [];
+  //here the deconstructing leads to: 
+  for (const [index0, index1] of this.blockPositions) {
+      if (index0 === lowestIndex0Value) {
+          resultArray.push([index0, index1]);
+      }
+  }
+
+  return resultArray;
+}
 
 }
 

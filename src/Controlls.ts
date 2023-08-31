@@ -29,6 +29,9 @@ class Controlls{
             }
             break
         case "ArrowRight":  
+        if(!this.checkCollisionRight()){
+            this.moveRight()
+        }
             break
         }
     }
@@ -87,6 +90,16 @@ class Controlls{
         return true;
     }
 
+    checkCollisionRight(): boolean{
+        if(this._currentPlayBlock != null){
+            console.log("checking for colision left controller")
+            return this._playField.checkCollisionRight(this._currentPlayBlock)
+        }
+        //if no playblock exists this should lateron create a new one...
+        console.log("collison = true")
+        return true;
+    }
+
     blockField(blockPositions: number[][]){
         for(let blockPosition of blockPositions){
             //this._playField.setFieldColor(blockPosition[0],blockPosition[1],"blue")
@@ -122,7 +135,15 @@ class Controlls{
         }
     }
   
-    moveRight() {}
+    moveRight() {
+        if(this._currentPlayBlock != null && this._currentPlayBlock != undefined){
+            this.freeField(this._currentPlayBlock.blockPositions)
+            for(let blockPosition of this._currentPlayBlock.blockPositions){
+                blockPosition[0] = blockPosition[0] + 1
+            }
+            this.blockField(this._currentPlayBlock.blockPositions)
+        }
+    }
   
     moveDown() {}
 
