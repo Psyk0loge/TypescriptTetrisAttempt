@@ -20,17 +20,17 @@ class Controlls{
         switch(key) {
         case "ArrowDown":  
             if(!this.checkCollisionDown()){
-                this.fall()
+                this.move(x => x[1] = x[1] + 1)
             }
             break
         case "ArrowLeft":  
             if(!this.checkCollisionLeft()){
-                this.moveLeft()
+                this.move((x) => x[0] = x[0] -1)
             }
             break
         case "ArrowRight":  
         if(!this.checkCollisionRight()){
-            this.moveRight()
+            this.move(x => x[0] = x[0] + 1)
         }
             break
         }
@@ -115,38 +115,18 @@ class Controlls{
         }
     }
 
-    fall(){
+    move(fn: (blockPositions: number[]) => number) {
         if(this._currentPlayBlock != null && this._currentPlayBlock != undefined){
             this.freeField(this._currentPlayBlock.blockPositions)
             for(let blockPosition of this._currentPlayBlock.blockPositions){
-                blockPosition[1] = blockPosition[1] + 1
+                //blockPosition[0] = fn(blockPosition[0])
+                fn(blockPosition)
             }
             this.blockField(this._currentPlayBlock.blockPositions)
         }
     }
 
-    moveLeft() {
-        if(this._currentPlayBlock != null && this._currentPlayBlock != undefined){
-            this.freeField(this._currentPlayBlock.blockPositions)
-            for(let blockPosition of this._currentPlayBlock.blockPositions){
-                blockPosition[0] = blockPosition[0] - 1
-            }
-            this.blockField(this._currentPlayBlock.blockPositions)
-        }
-    }
-  
-    moveRight() {
-        if(this._currentPlayBlock != null && this._currentPlayBlock != undefined){
-            this.freeField(this._currentPlayBlock.blockPositions)
-            for(let blockPosition of this._currentPlayBlock.blockPositions){
-                blockPosition[0] = blockPosition[0] + 1
-            }
-            this.blockField(this._currentPlayBlock.blockPositions)
-        }
-    }
-  
-    moveDown() {}
-
+    
     // turn(){
 
     // }

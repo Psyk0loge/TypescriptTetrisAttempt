@@ -80,7 +80,7 @@ class PlayField{
     }
 
     checkIfFieldExists(numberToCheck: number): boolean{
-        return ((numberToCheck >= 0) && (numberToCheck <= this.TETRIS_FIELD_SIZE_X))
+        return ((numberToCheck >= 0) && (numberToCheck <= this.TETRIS_FIELD_SIZE_X-1))
     }
 
     checkCollisionLeft(blocks : PlayBlocks): boolean{
@@ -148,10 +148,7 @@ class PlayField{
         //console.log("Printed: "+ `${x},${y}`)
     }
 
-    // setFieldColor(x: number, y: number, color: string){
-    //     this._playFieldArray[x][y].setFieldColor(color)
-    //     
-    // }
+
 }
 
 export { PlayField };
