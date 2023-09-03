@@ -74,43 +74,34 @@ class PlayField{
         }
     }
 
-    checkCollisionDown(x: number, y: number): boolean{
-        y = y + 1
-        return this.checkCollision(x,y)
-    }
-
-    checkIfFieldExists(numberToCheck: number): boolean{
-        return ((numberToCheck >= 0) && (numberToCheck <= this.TETRIS_FIELD_SIZE_X-1))
-    }
-
-    checkCollisionLeft(blocks : PlayBlocks): boolean{
-        //get relevant blocks
-        //add + 1 von x value
+    checkCollisionDown(blocks: PlayBlocks): boolean{
         let collision = false
-        for(let checkBlockLeft of blocks.getLeftBlocksToCheck()){
-            checkBlockLeft[0] = checkBlockLeft[0] - 1
-            if(this.checkIfFieldExists(checkBlockLeft[0])){
-                if(this.checkCollision(checkBlockLeft[0],checkBlockLeft[1])){
-                    console.log("left collision detected")
-                    collision = true;
-                }else{
-                    console.log("no left collision detected")
-                }
+        for(let block of blocks.getLowestBlockPosition()){
+            block[1] = block[1] + 1 
+            if(this.checkCollision(block[0], block[1])){
+                console.log("left collision detected")
+                collision = true;
             }else{
-                return true
+                console.log("no left collision detected")
             }
+
         }
         return collision
     }
 
-    checkCollisionRight(blocks : PlayBlocks): boolean{
+    //Todo: vllt so überabeiten, dass man x und y über gibt und beides überprüft wird...
+    //weil der wirft noch einen Fehler in manchen Fällen...
+    checkIfFieldExists(numberToCheck: number): boolean{
+        return ((numberToCheck >= 0) && (numberToCheck <= this.TETRIS_FIELD_SIZE_X-1))
+    }
+
+    //Todo: allgemeine Methode check collision die die anderen methoden "ablöst"
+    checkCollisionDirection(blocks: PlayBlocks, getBlocksToCheck: ()=>number[][]): boolean{
         let collision = false
-        //get right blocks to check
-        for(let checkBlockLeft of blocks.getRightBlocksToCheck()){
-            //add + 1
-            checkBlockLeft[0] = checkBlockLeft[0] + 1
-            if(this.checkIfFieldExists(checkBlockLeft[0])){
-                if(this.checkCollision(checkBlockLeft[0],checkBlockLeft[1])){
+        for(let checkBlock of blocks.getLeftBlocksToCheck()){
+            checkBlock[0] = checkBlock[0] - 1
+            if(this.checkIfFieldExists(checkBlock[0])){
+                if(this.checkCollision(checkBlock[0],checkBlock[1])){
                     console.log("left collision detected")
                     collision = true;
                 }else{

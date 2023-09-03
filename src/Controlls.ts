@@ -17,22 +17,24 @@ class Controlls{
 
     playerBlockControl(key : string){
         console.log(`recieved input from key: ${key}`)
-        switch(key) {
-        case "ArrowDown":  
-            if(!this.checkCollisionDown()){
-                this.move(x => x[1] = x[1] + 1)
+        if(this._currentPlayBlock != null &&this._currentPlayBlock != undefined){
+            switch(key) {
+            case "ArrowDown":  
+                if(!this.checkCollisionDirection(this._currentPlayBlock.getLowestBlockPosition)){
+                    this.move(x => x[1] = x[1] + 1)
+                }
+                break
+            case "ArrowLeft":  
+                if(!this.checkCollisionDirection(this._currentPlayBlock.getLeftBlocksToCheck)){
+                    this.move((x) => x[0] = x[0] -1)
+                }
+                break
+            case "ArrowRight":  
+            if(!this.checkCollisionDirection(this._currentPlayBlock.getRightBlocksToCheck)){
+                this.move(x => x[0] = x[0] + 1)
             }
-            break
-        case "ArrowLeft":  
-            if(!this.checkCollisionLeft()){
-                this.move((x) => x[0] = x[0] -1)
+                break
             }
-            break
-        case "ArrowRight":  
-        if(!this.checkCollisionRight()){
-            this.move(x => x[0] = x[0] + 1)
-        }
-            break
         }
     }
 
@@ -66,34 +68,18 @@ class Controlls{
 
     checkCollisionDown(): boolean{
         if(this._currentPlayBlock != null){
-            let checkPosition = this._currentPlayBlock.getLowestBlockPosition()
-            for(let block of checkPosition){
-                if(this._playField.checkCollisionDown(block[0], block[1])){
-                    return true
-                }
-            }
-            return false
-            //console.log(this._playField.checkCollisionDown(checkPosition[0],checkPosition[1]))
+            console.log("checking for colision right controller")  
+            return this._playField.checkCollisionDown(this._currentPlayBlock)
         }
         //if no playblock exists this should lateron create a new one...
         console.log("collison = true")
         return true;
     }
 
-    checkCollisionLeft(): boolean{
+    checkCollisionDirection(getBlocksToCheck: () => number[][]): boolean{
         if(this._currentPlayBlock != null){
             console.log("checking for colision left controller")
-            return this._playField.checkCollisionLeft(this._currentPlayBlock)
-        }
-        //if no playblock exists this should lateron create a new one...
-        console.log("collison = true")
-        return true;
-    }
-
-    checkCollisionRight(): boolean{
-        if(this._currentPlayBlock != null){
-            console.log("checking for colision left controller")
-            return this._playField.checkCollisionRight(this._currentPlayBlock)
+            return this._playField.checkCollisionDirection(this._currentPlayBlock, getBlocksToCheck)
         }
         //if no playblock exists this should lateron create a new one...
         console.log("collison = true")

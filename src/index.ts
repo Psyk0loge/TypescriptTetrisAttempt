@@ -27,7 +27,7 @@ function gameLoop(){
   console.log("now checking for colision")
   if(!playControlls.checkCollisionDown()){
     console.log("start falling")
-    playControlls.fall()
+    playControlls.move(x => x[1] = x[1] + 1)
   } else {
     // das machen was passieren soll wenn andockt...
     playControlls.createNewPlayBlock()
