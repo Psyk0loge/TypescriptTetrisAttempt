@@ -1,6 +1,6 @@
 import { getRandomInt } from "./GetRandomNumber";
 
-class PlayBlock {
+export class PlayBlock {
   //finally found the bug.. since this is static it only exists once meaning that only 4 things can be created in total
   //and ...
   public blockTypes = [
@@ -42,6 +42,10 @@ class PlayBlock {
   constructor() {
     this.blockPositions = this.deepCopyArray(getRandomInt(4));
   }
+  
+  public getPlayBlocksCheck(blocks: PlayBlock): number[][] {
+    return [[]]
+  }
 
   deepCopyArray(index: number): number[][] {
     return this.blockTypes[index].map((x) => x);
@@ -52,7 +56,7 @@ class PlayBlock {
   }
 
   //die muss ich noch nachvollziehen...
-  getLowestBlockPosition(): number[][] {
+  getLowestBlockPosition(playblock: PlayBlock): number[][] {
     const highestValuesMap: Record<number, number> = {};
 
     for (const [index0, index1] of this.blockPositions) {
@@ -73,7 +77,7 @@ class PlayBlock {
     return resultArray;
   }
 
-  getLeftBlocksToCheck(): number[][] {
+  getLeftBlocksToCheck(playblock: PlayBlock): number[][] {
     const lowestIndex0Value = Math.min(...this.blockPositions.map(([index0]) => index0));
 
     const resultArray: number[][] = [];
@@ -85,8 +89,8 @@ class PlayBlock {
     }
 
     return resultArray;
-}
-getRightBlocksToCheck(): number[][] {
+  }
+  getRightBlocksToCheck(playblock: PlayBlock): number[][] {
   const lowestIndex0Value = Math.max(...this.blockPositions.map(([index0]) => index0));
 
   const resultArray: number[][] = [];
@@ -115,4 +119,4 @@ export namespace BlockTypeValues{
 
 
 
-export {PlayBlock as PlayBlocks}
+// export {PlayBlock as PlayBlocks}

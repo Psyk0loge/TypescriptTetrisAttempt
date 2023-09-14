@@ -1,6 +1,6 @@
 import {PlayField} from "./PlayField"
 import { getRandomInt } from "./GetRandomNumber";
-import { PlayBlocks } from "./PlayBlocks";
+import { PlayBlock } from "./PlayBlocks";
 
 class Controlls{
     private readonly _playField: PlayField;
@@ -13,7 +13,7 @@ class Controlls{
     }
     
 
-    private _currentPlayBlock?: PlayBlocks
+    private _currentPlayBlock?: PlayBlock
 
     playerBlockControl(key : string){
         console.log(`recieved input from key: ${key}`)
@@ -56,7 +56,7 @@ class Controlls{
     }
 
     createNewPlayBlock(){
-        this._currentPlayBlock = new PlayBlocks()
+        this._currentPlayBlock = new PlayBlock()
     }
 
     playBlockExists(){
@@ -69,14 +69,14 @@ class Controlls{
     checkCollisionDown(): boolean{
         if(this._currentPlayBlock != null){
             console.log("checking for colision right controller")  
-            return this._playField.checkCollisionDown(this._currentPlayBlock)
+            return this._playField.checkCollisionDown(this._currentPlayBlock, this._currentPlayBlock.getLowestBlockPosition)
         }
         //if no playblock exists this should lateron create a new one...
         console.log("collison = true")
         return true;
     }
 
-    checkCollisionDirection(getBlocksToCheck: () => number[][]): boolean{
+    checkCollisionDirection(getBlocksToCheck: (self: PlayBlock)=>number[][]): boolean{
         if(this._currentPlayBlock != null){
             console.log("checking for colision left controller")
             return this._playField.checkCollisionDirection(this._currentPlayBlock, getBlocksToCheck)
@@ -110,6 +110,10 @@ class Controlls{
             }
             this.blockField(this._currentPlayBlock.blockPositions)
         }
+    }
+
+    checkFullLines(){
+        this._playField.checkAndReactToFullLines()
     }
 
     

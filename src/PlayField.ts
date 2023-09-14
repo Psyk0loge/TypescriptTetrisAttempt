@@ -1,4 +1,4 @@
-import { PlayBlocks } from "./PlayBlocks";
+import { PlayBlock } from "./PlayBlocks";
 import {PlayFieldBlock} from "./PlayFieldBlock"
 
 class PlayField{
@@ -40,6 +40,46 @@ class PlayField{
         container?.appendChild(playFieldMainDiv);
     }
 
+    checkIfLineIsFull(yIndex: number): boolean{
+        var lineIsFull = true;
+        for(let i = 0; i < this.TETRIS_FIELD_SIZE_X; i++ ){
+            var playFieldBlock = this._playFieldArray[i][yIndex]
+            if(!playFieldBlock.isFieldTaken()){
+                lineIsFull = false;
+                break;
+            }
+        }
+        return lineIsFull
+    }
+
+    moveLineGivenLinesDown(yIndexOfLineToMove: number, linesToMove: number){
+        for(let i = 0; i < this.TETRIS_FIELD_SIZE_X; i++ ){
+            if(this._playFieldArray[i][yIndexOfLineToMove].isFieldTaken()){
+                this._playFieldArray[i][yIndexOfLineToMove + linesToMove].setFieldToTaken()
+                this._playFieldArray[i][yIndexOfLineToMove].setFree()
+            }
+        }
+    }
+
+    clearFullLine(yIndex: number){
+        for(let i = 0; i < this.TETRIS_FIELD_SIZE_X; i++ ){
+            this._playFieldArray[i][yIndex].setFree()
+        }
+    }
+
+    checkAndReactToFullLines(){
+        for(let i = this.TETRIS_FIELD_SIZE_Y-1; i > 0; i--){
+            var fallCounter = 0
+            if(this.checkIfLineIsFull(i)){
+                fallCounter++
+                this.clearFullLine(i)
+                this.moveLineGivenLinesDown(i, fallCounter)
+            }
+        }
+        this.printPlayField()
+    }
+
+
     //Todo: irgendwann mal ändern das der nicht irgendwie die ersten 3 nicht printed...
     printPlayField(){
         const playField = document.getElementById("playField")
@@ -74,19 +114,20 @@ class PlayField{
         }
     }
 
-    checkCollisionDown(blocks: PlayBlocks): boolean{
-        let collision = false
-        for(let block of blocks.getLowestBlockPosition()){
-            block[1] = block[1] + 1 
-            if(this.checkCollision(block[0], block[1])){
-                console.log("left collision detected")
-                collision = true;
-            }else{
-                console.log("no left collision detected")
-            }
+    checkCollisionDown(blocks: PlayBlock, getBlocksToCheck: (self: PlayBlock)=>number[][]): boolean{
+        // let collision = false
+        // for(let block of blocks.getLowestBlockPosition()){
+        //     block[1] = block[1] + 1 
+        //     if(this.checkCollision(block[0], block[1])){
+        //         console.log("down collision detected")
+        //         collision = true;
+        //     }else{
+        //         console.log("no down collision detected")
+        //     }
 
-        }
-        return collision
+        // }
+        // return collision
+        return this.checkCollisionDirection(blocks, getBlocksToCheck)
     }
 
     //Todo: vllt so überabeiten, dass man x und y über gibt und beides überprüft wird...
@@ -95,10 +136,12 @@ class PlayField{
         return ((numberToCheck >= 0) && (numberToCheck <= this.TETRIS_FIELD_SIZE_X-1))
     }
 
-    //Todo: allgemeine Methode check collision die die anderen methoden "ablöst"
-    checkCollisionDirection(blocks: PlayBlocks, getBlocksToCheck: ()=>number[][]): boolean{
+    // checks if field exists and is taken
+    checkCollisionDirection(blocks: PlayBlock, getBlocksToCheck: (self: PlayBlock)=>number[][]): boolean{
         let collision = false
-        for(let checkBlock of blocks.getLeftBlocksToCheck()){
+        PlayBlock.prototype.getPlayBlocksCheck = getBlocksToCheck
+        //Todo: change here that the method for the blocks to check is provided as well
+        for(let checkBlock of blocks.getPlayBlocksCheck(blocks)){
             checkBlock[0] = checkBlock[0] - 1
             if(this.checkIfFieldExists(checkBlock[0])){
                 if(this.checkCollision(checkBlock[0],checkBlock[1])){
