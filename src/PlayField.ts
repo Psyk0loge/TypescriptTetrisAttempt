@@ -108,13 +108,14 @@ class PlayField{
             console.log(`checking on field: ${x}-${y}`)
             return true;
         }else{
-            console.log(`checking on field: ${x}-${y} the field is ${this._playFieldArray[x][y].isFieldTaken()}`)
+            console.log(`checking on field: ${x}-${y} the field is 
+            ${this._playFieldArray[x][y].isFieldTaken()}`)
             //create a method that check if a field exists and than gives back the 
             return this._playFieldArray[x][y].isFieldTaken()
         }
     }
 
-    checkCollisionDown(blocks: PlayBlock, getBlocksToCheck: (self: PlayBlock)=>number[][]): boolean{
+    checkCollisionDown(blocks: PlayBlock, getBlocksToCheck: number[][]): boolean{
         // let collision = false
         // for(let block of blocks.getLowestBlockPosition()){
         //     block[1] = block[1] + 1 
@@ -132,18 +133,18 @@ class PlayField{
 
     //Todo: vllt so überabeiten, dass man x und y über gibt und beides überprüft wird...
     //weil der wirft noch einen Fehler in manchen Fällen...
-    checkIfFieldExists(numberToCheck: number): boolean{
-        return ((numberToCheck >= 0) && (numberToCheck <= this.TETRIS_FIELD_SIZE_X-1))
+    checkIfFieldExists(xToCheck: number, yToCheck: number): boolean{
+        return ((xToCheck >= 0) && (xToCheck <= this.TETRIS_FIELD_SIZE_X-1)) && 
+                ((xToCheck >= 0) && (yToCheck <= this.TETRIS_FIELD_SIZE_Y - 1))
     }
 
     // checks if field exists and is taken
-    checkCollisionDirection(blocks: PlayBlock, getBlocksToCheck: (self: PlayBlock)=>number[][]): boolean{
+    checkCollisionDirection(blocks: PlayBlock, blocksToCheck: number[][]): boolean{
         let collision = false
-        PlayBlock.prototype.getPlayBlocksCheck = getBlocksToCheck
         //Todo: change here that the method for the blocks to check is provided as well
-        for(let checkBlock of blocks.getPlayBlocksCheck(blocks)){
-            checkBlock[0] = checkBlock[0] - 1
-            if(this.checkIfFieldExists(checkBlock[0])){
+        for(let checkBlock of blocksToCheck){
+            // checkBlock[0] = checkBlock[0] - 1
+            if(this.checkIfFieldExists(checkBlock[0], checkBlock[1])){
                 if(this.checkCollision(checkBlock[0],checkBlock[1])){
                     console.log("left collision detected")
                     collision = true;

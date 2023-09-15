@@ -29,10 +29,10 @@ function gameLoop(){
 
   if(!playControlls.checkCollisionDown()){
     console.log("start falling")
-    playControlls.move(x => x[1] = x[1] + 1)
+    playControlls.move(1, x => [x[0], x[1] + 1])
   } else {
     // das machen was passieren soll wenn andockt...
-    playControlls.checkFullLines()
+    // playControlls.checkFullLines()
     playControlls.createNewPlayBlock()
     //Punkte Zählen...
   }
