@@ -99,6 +99,20 @@ getRightBlocksToCheck(): number[][] {
 
   return resultArray;
 }
+//introduce parameter, that contains max or min...
+getBlocksToCheck(getRelevantIndex: (a: number[]) => number): number[][] {
+  const index0Values = this.blockPositions.map(([index0]) => index0);
+  const lowestIndex0Value = getRelevantIndex(index0Values)
+  const resultArray: number[][] = [];
+  //here the deconstructing leads to: 
+  for (const [index0, index1] of this.blockPositions) {
+      if (index0 === lowestIndex0Value) {
+          resultArray.push([index0, index1]);
+      }
+  }
+
+  return resultArray;
+}
 
 }
 

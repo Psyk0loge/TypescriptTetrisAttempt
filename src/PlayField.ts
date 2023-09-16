@@ -7,6 +7,9 @@ class PlayField{
     readonly TETRIS_FIELD_SIZE_Y:number = 20;
     readonly DEFAULT_FIELD_BLOCK_SIZE:number = 50;
     private _playFieldArray: PlayFieldBlock[][]
+     //Todo: make sth that saves the blocks that are no longer active...
+    private _inactiveBlocks = new Array<PlayBlocks>()
+    
 
     constructor(fieldSize_X: number, fieldSize_Y: number, defaultBlock_Size: number){
         this.TETRIS_FIELD_SIZE_X = fieldSize_X;
@@ -96,12 +99,13 @@ class PlayField{
     }
 
     //Todo: allgemeine Methode check collision die die anderen methoden "ablöst"
-    checkCollisionDirection(blocks: PlayBlocks, getBlocksToCheck: ()=>number[][]): boolean{
+    checkCollisionDirection(blocks: PlayBlocks, blocksToCheck: number[][], index: number, shift: number): boolean{
         let collision = false
-        for(let checkBlock of blocks.getLeftBlocksToCheck()){
-            checkBlock[0] = checkBlock[0] - 1
-            if(this.checkIfFieldExists(checkBlock[0])){
-                if(this.checkCollision(checkBlock[0],checkBlock[1])){
+        for(let checkBlock of blocksToCheck){
+            //Todo: hier muss noch generisch sein ob der jetzt links recht oder unten schauen soll
+            checkBlock[index] = checkBlock[index] + shift
+            if(this.checkIfFieldExists(checkBlock[index])){
+                if(this.checkCollision(checkBlock[index],checkBlock[1])){
                     console.log("left collision detected")
                     collision = true;
                 }else{

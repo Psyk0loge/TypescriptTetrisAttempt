@@ -1,3 +1,5 @@
+import { PlayBlocks } from "./PlayBlocks";
+
 class PlayFieldBlock {
   private _isFieldTaken = false;
   //Todo: check if this is the best datatype
