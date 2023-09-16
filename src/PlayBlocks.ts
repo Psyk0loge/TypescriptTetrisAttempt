@@ -57,14 +57,21 @@ export class PlayBlock {
 
   //die muss ich noch nachvollziehen...
   getLowestBlockPosition(): number[][] {
-    const lowestIndex1Value = Math.min(...this.blockPositions.map(([index1]) => index1));
+    const highestValuesMap: Record<number, number> = {};
+
+    for (const [index0, index1] of this.blockPositions) {
+      if (
+        highestValuesMap[index0] === undefined ||
+        index1 > highestValuesMap[index0]
+      ) {
+        highestValuesMap[index0] = index1;
+      }
+    }
 
     const resultArray: number[][] = [];
-    //here the deconstructing leads to: 
-    for (const [index0, index1] of this.blockPositions) {
-        if (index1 === lowestIndex1Value) {
-            resultArray.push([index0, index1 + 1]);
-        }
+    for (const index0 in highestValuesMap) {
+      const index1 = highestValuesMap[index0];
+      resultArray.push([Number(index0), index1]);
     }
 
     return resultArray;
