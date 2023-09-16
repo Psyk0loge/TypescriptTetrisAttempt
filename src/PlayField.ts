@@ -1,4 +1,4 @@
-import { PlayBlocks } from "./PlayBlocks";
+import { PlayBlock } from "./PlayBlocks";
 import {PlayFieldBlock} from "./PlayFieldBlock"
 
 class PlayField{
@@ -6,10 +6,7 @@ class PlayField{
     readonly TETRIS_FIELD_SIZE_X:number  = 10;
     readonly TETRIS_FIELD_SIZE_Y:number = 20;
     readonly DEFAULT_FIELD_BLOCK_SIZE:number = 50;
-    private _playFieldArray: PlayFieldBlock[][]
-     //Todo: make sth that saves the blocks that are no longer active...
-    private _inactiveBlocks = new Array<PlayBlocks>()
-    
+    private _playFieldArray: boolean[][]
 
     constructor(fieldSize_X: number, fieldSize_Y: number, defaultBlock_Size: number){
         this.TETRIS_FIELD_SIZE_X = fieldSize_X;
@@ -18,9 +15,10 @@ class PlayField{
         this._playFieldArray =  this._getEmptyPlayField();
     }
 
-    private _getEmptyPlayField(): PlayFieldBlock[][]{
-        const playFieldArray: PlayFieldBlock[][] = Array.from({ length: this.TETRIS_FIELD_SIZE_X }, () =>
-          Array.from({ length: this.TETRIS_FIELD_SIZE_Y }, () => new PlayFieldBlock())
+    private _getEmptyPlayField(): boolean[][]{
+        const playFieldArray: boolean[][] = Array.from({ length: this.TETRIS_FIELD_SIZE_X },
+             () => Array.from({ length: this.TETRIS_FIELD_SIZE_Y },
+            () => false)
         );
         return playFieldArray;
     }
@@ -43,6 +41,46 @@ class PlayField{
         container?.appendChild(playFieldMainDiv);
     }
 
+    checkIfLineIsFull(yIndex: number): boolean{
+        var lineIsFull = true;
+        for(let i = 0; i < this.TETRIS_FIELD_SIZE_X; i++ ){
+            var playFieldBlock = this._playFieldArray[i][yIndex]
+            if(!this._playFieldArray[i][yIndex]){
+                lineIsFull = false;
+                break;
+            }
+        }
+        return lineIsFull
+    }
+
+    moveLineGivenLinesDown(yIndexOfLineToMove: number, linesToMove: number){
+        for(let i = 0; i < this.TETRIS_FIELD_SIZE_X; i++ ){
+            if(this._playFieldArray[i][yIndexOfLineToMove]){
+                this._playFieldArray[i][yIndexOfLineToMove + linesToMove] = true
+                this._playFieldArray[i][yIndexOfLineToMove] = false
+            }
+        }
+    }
+
+    clearFullLine(yIndex: number){
+        for(let i = 0; i < this.TETRIS_FIELD_SIZE_X; i++ ){
+            this._playFieldArray[i][yIndex] = false
+        }
+    }
+
+    checkAndReactToFullLines(){
+        for(let i = this.TETRIS_FIELD_SIZE_Y-1; i > 0; i--){
+            var fallCounter = 0
+            if(this.checkIfLineIsFull(i)){
+                fallCounter++
+                this.clearFullLine(i)
+                this.moveLineGivenLinesDown(i, fallCounter)
+            }
+        }
+        this.printPlayField()
+    }
+
+
     //Todo: irgendwann mal ändern das der nicht irgendwie die ersten 3 nicht printed...
     printPlayField(){
         const playField = document.getElementById("playField")
@@ -56,7 +94,13 @@ class PlayField{
                 const playFieldBlockHtml = document.createElement("div")
                 playFieldBlockHtml?.setAttribute("id", `${x}-${y}`)
                 const fieldParameters = this._playFieldArray[x][y]
-                playFieldBlockHtml.style.backgroundColor = fieldParameters.getFieldColor();
+                //Todo: pack into its own function
+                if(this._playFieldArray[x][y]){
+                    //field is taken
+                    playFieldBlockHtml.style.backgroundColor = "blue";
+                }else{
+                    playFieldBlockHtml.style.backgroundColor = "black"
+                }
                 playFieldBlockHtml.style.width = this.DEFAULT_FIELD_BLOCK_SIZE + "px"
                 playFieldBlockHtml.style.height = this.DEFAULT_FIELD_BLOCK_SIZE + "px"
                 playFieldBlockHtml.style.display = "block"
@@ -66,46 +110,38 @@ class PlayField{
         }
     }
 
+    //Todo: check who uses this method and maybe change it to checkCollisionDirection
     private checkCollision(x: number, y: number): boolean{
+        //Todo: check if this realy prevents the programm from throwing an exception...
         if(this._playFieldArray[x][y] == undefined){
             console.log(`checking on field: ${x}-${y}`)
             return true;
         }else{
-            console.log(`checking on field: ${x}-${y} the field is ${this._playFieldArray[x][y].isFieldTaken()}`)
+            console.log(`checking on field: ${x}-${y} the field is 
+            ${this._playFieldArray[x][y]}`)
             //create a method that check if a field exists and than gives back the 
-            return this._playFieldArray[x][y].isFieldTaken()
+            return this._playFieldArray[x][y]
         }
     }
 
-    checkCollisionDown(blocks: PlayBlocks): boolean{
-        let collision = false
-        for(let block of blocks.getLowestBlockPosition()){
-            block[1] = block[1] + 1 
-            if(this.checkCollision(block[0], block[1])){
-                console.log("left collision detected")
-                collision = true;
-            }else{
-                console.log("no left collision detected")
-            }
-
-        }
-        return collision
+    checkCollisionDown(blocks: PlayBlock, getBlocksToCheck: number[][]): boolean{
+        return this.checkCollisionDirection(blocks, getBlocksToCheck)
     }
 
-    //Todo: vllt so überabeiten, dass man x und y über gibt und beides überprüft wird...
-    //weil der wirft noch einen Fehler in manchen Fällen...
-    checkIfFieldExists(numberToCheck: number): boolean{
-        return ((numberToCheck >= 0) && (numberToCheck <= this.TETRIS_FIELD_SIZE_X-1))
+    checkIfFieldExists(xToCheck: number, yToCheck: number): boolean{
+        return ((xToCheck >= 0) && (xToCheck <= this.TETRIS_FIELD_SIZE_X-1)) && 
+                ((xToCheck >= 0) && (yToCheck <= this.TETRIS_FIELD_SIZE_Y - 1))
     }
 
-    //Todo: allgemeine Methode check collision die die anderen methoden "ablöst"
-    checkCollisionDirection(blocks: PlayBlocks, blocksToCheck: number[][], index: number, shift: number): boolean{
+    // checks if field exists and is taken
+    checkCollisionDirection(blocks: PlayBlock, blocksToCheck: number[][]): boolean{
         let collision = false
+        //Todo: change here that the method for the blocks to check is provided as well
         for(let checkBlock of blocksToCheck){
-            //Todo: hier muss noch generisch sein ob der jetzt links recht oder unten schauen soll
-            checkBlock[index] = checkBlock[index] + shift
-            if(this.checkIfFieldExists(checkBlock[index])){
-                if(this.checkCollision(checkBlock[index],checkBlock[1])){
+            // checkBlock[0] = checkBlock[0] - 1
+            if(this.checkIfFieldExists(checkBlock[0], checkBlock[1])){
+                //hier muss noch irgendwie rein, dass der +
+                if(this.checkCollision(checkBlock[0],checkBlock[1])){
                     console.log("left collision detected")
                     collision = true;
                 }else{
@@ -125,12 +161,12 @@ class PlayField{
     }
 
     setFieldToTaken(x: number, y: number){
-        this._playFieldArray[x][y].setTaken()
+        this._playFieldArray[x][y] = true
         this.renewPlayField()
     }
 
     setFieldToFree(x: number, y: number){
-        this._playFieldArray[x][y].setFree()
+        this._playFieldArray[x][y] = false
         this.renewPlayField()
     }
 

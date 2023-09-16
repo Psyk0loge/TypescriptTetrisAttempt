@@ -1,6 +1,6 @@
 import {PlayField} from "./PlayField"
 import { getRandomInt } from "./GetRandomNumber";
-import { PlayBlocks } from "./PlayBlocks";
+import { PlayBlock } from "./PlayBlocks";
 
 class Controlls{
     private readonly _playField: PlayField;
@@ -13,30 +13,43 @@ class Controlls{
     }
     
 
-    private _currentPlayBlock?: PlayBlocks
+    private _currentPlayBlock?: PlayBlock
 
     playerBlockControl(key : string){
         console.log(`recieved input from key: ${key}`)
         if(this._currentPlayBlock != null &&this._currentPlayBlock != undefined){
             switch(key) {
             case "ArrowDown":  
-                if(!this.checkCollisionDirection(this._currentPlayBlock.getLowestBlockPosition(), 1, -1)){
-                    this.move(x => x[1] = x[1] + 1)
+                if(!this.checkCollisionDirection(
+                    this._currentPlayBlock.getLowestBlockPosition())
+                    ){
+                    //der prüft das Feld auf dem er sich befindet statt das wo er hin soll
+                    this.move(1, x => this.erhoeheZweitesElement(x));
                 }
                 break
             case "ArrowLeft":  
-                if(!this.checkCollisionDirection(this._currentPlayBlock.getLeftBlocksToCheck(), 0, -1)){
-                    this.move((x) => x[0] = x[0] -1)
+                if(!this.checkCollisionDirection(
+                    this._currentPlayBlock.getLeftBlocksToCheck())
+                    ){
+                    this.move(0, (x) => [x[0] - 1, x[1]])
                 }
                 break
             case "ArrowRight":  
-            if(!this.checkCollisionDirection(this._currentPlayBlock.getRightBlocksToCheck(), 0, +1)){
-                this.move(x => x[0] = x[0] + 1)
+            if(!this.checkCollisionDirection(
+                this._currentPlayBlock.getRightBlocksToCheck())
+                ){
+                this.move(0, x => [x[0] + 1, x[1]])
             }
                 break
             }
         }
     }
+
+    //count 2nd element up
+    erhoeheZweitesElement(array: number[]): number[] {
+        array[1] = array[1] + 1
+        return array
+    };
 
     getFieldSize_X():number {
         return this._playField.TETRIS_FIELD_SIZE_X
@@ -56,7 +69,7 @@ class Controlls{
     }
 
     createNewPlayBlock(){
-        this._currentPlayBlock = new PlayBlocks()
+        this._currentPlayBlock = new PlayBlock()
     }
 
     playBlockExists(){
@@ -69,17 +82,20 @@ class Controlls{
     checkCollisionDown(): boolean{
         if(this._currentPlayBlock != null){
             console.log("checking for colision right controller")  
-            return this._playField.checkCollisionDown(this._currentPlayBlock)
+            return this._playField.checkCollisionDirection(
+                this._currentPlayBlock,
+                this._currentPlayBlock.getLowestBlockPosition()
+            );
         }
         //if no playblock exists this should lateron create a new one...
         console.log("collison = true")
         return true; 
     }
 
-    checkCollisionDirection(blocksToCheck: number[][], index: number, shift: number): boolean{
+    checkCollisionDirection(blocksToCheck: number[][]): boolean{
         if(this._currentPlayBlock != null){
             console.log("checking for colision left controller")
-            return this._playField.checkCollisionDirection(this._currentPlayBlock, blocksToCheck, index, shift)
+            return this._playField.checkCollisionDirection(this._currentPlayBlock, blocksToCheck)
         }
         //if no playblock exists this should lateron create a new one...
         console.log("collison = true")
@@ -101,15 +117,19 @@ class Controlls{
         }
     }
 
-    move(fn: (blockPositions: number[]) => number) {
+    move(index: number, fn: (blockPositions: number[]) => number[]) {
         if(this._currentPlayBlock != null && this._currentPlayBlock != undefined){
             this.freeField(this._currentPlayBlock.blockPositions)
-            for(let blockPosition of this._currentPlayBlock.blockPositions){
+            for(let blockPosition in this._currentPlayBlock.blockPositions){
                 //blockPosition[0] = fn(blockPosition[0])
-                fn(blockPosition)
+                this._currentPlayBlock.blockPositions[blockPosition] = fn(this._currentPlayBlock.blockPositions[blockPosition])
             }
             this.blockField(this._currentPlayBlock.blockPositions)
         }
+    }
+
+    checkFullLines(){
+        this._playField.checkAndReactToFullLines()
     }
 
     
