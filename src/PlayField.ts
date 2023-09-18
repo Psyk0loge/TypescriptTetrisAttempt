@@ -69,17 +69,20 @@ class PlayField{
     }
 
     checkAndReactToFullLines(){
+        var fallCounter = 0
         for(let i = this.TETRIS_FIELD_SIZE_Y-1; i > 0; i--){
-            var fallCounter = 0
             if(this.checkIfLineIsFull(i)){
-                fallCounter++
+                fallCounter = fallCounter + 1
                 this.clearFullLine(i)
-                this.moveLineGivenLinesDown(i, fallCounter)
+            }else{
+                if(fallCounter >0){
+                    this.moveLineGivenLinesDown(i, fallCounter)
+
+                }
             }
         }
-        this.printPlayField()
+        // this.printPlayField()d
     }
-
 
     //Todo: irgendwann mal ändern das der nicht irgendwie die ersten 3 nicht printed...
     printPlayField(){

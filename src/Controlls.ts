@@ -15,7 +15,9 @@ class Controlls{
 
     private _currentPlayBlock?: PlayBlock
 
-    playerBlockControl(key : string){
+    playerBlockControl(e : KeyboardEvent){
+        e.preventDefault()
+        let key = e.key
         console.log(`recieved input from key: ${key}`)
         if(this._currentPlayBlock != null &&this._currentPlayBlock != undefined){
             switch(key) {
@@ -65,7 +67,7 @@ class Controlls{
     
     constructor(playField: PlayField){
         this._playField = playField;
-        window.addEventListener("keydown", e => this.playerBlockControl(e.key))
+        window.addEventListener("keydown", e => this.playerBlockControl(e))
     }
 
     createNewPlayBlock(){
