@@ -81,7 +81,6 @@ class PlayField{
                 }
             }
         }
-        // this.printPlayField()d
     }
 
     //Todo: irgendwann mal ändern das der nicht irgendwie die ersten 3 nicht printed...

@@ -1,8 +1,8 @@
-# New Project
+# Tetris in typescript
 
-> ✨ Bootstrapped with Create Snowpack App (CSA).
+> in this project all I really want to to is getting an introduction to typescript. To get the whole typescript experience I deceidet not to use an framework like angular or react that to safe time, but to learn from the ground up.
 
-## Available Scripts
+## Motivation
 
 ### npm start
 
