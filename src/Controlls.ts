@@ -12,6 +12,7 @@ class Controlls{
         Down : 'down',
     }
     
+    
 
     private _currentPlayBlock?: PlayBlock
 
@@ -42,7 +43,10 @@ class Controlls{
                 ){
                 this.move(0, x => [x[0] + 1, x[1]])
             }
-                break
+            break
+            case "w":
+                this.turnLeft()
+                break;
             }
         }
     }
@@ -124,7 +128,8 @@ class Controlls{
             this.freeField(this._currentPlayBlock.blockPositions)
             for(let blockPosition in this._currentPlayBlock.blockPositions){
                 //blockPosition[0] = fn(blockPosition[0])
-                this._currentPlayBlock.blockPositions[blockPosition] = fn(this._currentPlayBlock.blockPositions[blockPosition])
+                this._currentPlayBlock.blockPositions[blockPosition] =
+                 fn(this._currentPlayBlock.blockPositions[blockPosition])
             }
             this.blockField(this._currentPlayBlock.blockPositions)
         }
@@ -134,10 +139,19 @@ class Controlls{
         this._playField.checkAndReactToFullLines()
     }
 
-    
-    // turn(){
+    //unclean cause sideeffects
+    turnLeft(){
+        var currentPlayBlockCopy = this._currentPlayBlock?.blockPositions
+        if(currentPlayBlockCopy != undefined){
 
-    // }
+            var tempArrayOverflowValue = currentPlayBlockCopy[3]
+            for(let i = 1; i < currentPlayBlockCopy.length; i++){
+                currentPlayBlockCopy[i] = currentPlayBlockCopy[i - 1]
+            }
+            currentPlayBlockCopy[0] = tempArrayOverflowValue
+            // this._currentPlayBlock?.blockPositions = currentPlayBlockCopy
+        }
+    }
 
 }
 export { Controlls };

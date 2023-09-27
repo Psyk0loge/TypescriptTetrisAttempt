@@ -3,45 +3,12 @@ import { getRandomInt } from "./GetRandomNumber";
 export class PlayBlock {
   //finally found the bug.. since this is static it only exists once meaning that only 4 things can be created in total
   //and ...
-  // public blockTypes = [
-  //   [
-  //     [4, 0],
-  //     [4, 1],
-  //     [4, 2],
-  //     [4, 3],
-  //   ],
-  //   [
-  //     [4, 0],
-  //     [4, 1],
-  //     [5, 0],
-  //     [5, 1],
-  //   ],
-  //   [
-  //     [4, 0],
-  //     [4, 1],
-  //     [4, 2],
-  //     [5, 0],
-  //   ],
-  //   [
-  //     [4, 0],
-  //     [4, 1],
-  //     [5, 1],
-  //     [5, 2],
-  //   ],
-  //   [
-  //     [4, 0],
-  //     [3, 1],
-  //     [4, 1],
-  //     [5, 1],
-  //   ],
-  // ];
-
   public blockTypes = [
     [
       [4, 0],
       [4, 1],
-      [5, 0],
-      [5, 1],
+      [4, 2],
+      [4, 3],
     ],
     [
       [4, 0],
@@ -52,22 +19,55 @@ export class PlayBlock {
     [
       [4, 0],
       [4, 1],
+      [4, 2],
       [5, 0],
-      [5, 1],
     ],
     [
       [4, 0],
       [4, 1],
-      [5, 0],
       [5, 1],
+      [5, 2],
     ],
     [
       [4, 0],
+      [3, 1],
       [4, 1],
-      [5, 0],
       [5, 1],
     ],
   ];
+
+  // public blockTypes = [
+  //   [
+  //     [4, 0],
+  //     [4, 1],
+  //     [5, 0],
+  //     [5, 1],
+  //   ],
+  //   [
+  //     [4, 0],
+  //     [4, 1],
+  //     [5, 0],
+  //     [5, 1],
+  //   ],
+  //   [
+  //     [4, 0],
+  //     [4, 1],
+  //     [5, 0],
+  //     [5, 1],
+  //   ],
+  //   [
+  //     [4, 0],
+  //     [4, 1],
+  //     [5, 0],
+  //     [5, 1],
+  //   ],
+  //   [
+  //     [4, 0],
+  //     [4, 1],
+  //     [5, 0],
+  //     [5, 1],
+  //   ],
+  // ];
 
   public blockPositions: number[][];
   private unChecked = true;
@@ -150,6 +150,10 @@ getBlocksToCheck(getRelevantIndex: (a: number[]) => number): number[][] {
   }
 
   return resultArray;
+}
+
+setBlockPosition(newBlockPositions: number[][]){
+  this.blockPositions = newBlockPositions;
 }
 
 }
