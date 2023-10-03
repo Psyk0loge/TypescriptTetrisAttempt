@@ -1,36 +1,38 @@
 import { PlayBlock } from "./PlayBlocks";
-import {PlayFieldBlock} from "./PlayFieldBlock"
+import { GAME_CONFIG } from "./GameConfig";
 
-class PlayField{
+class PlayField {
     //Why do I have to specify the value type here?
-    readonly TETRIS_FIELD_SIZE_X:number  = 10;
-    readonly TETRIS_FIELD_SIZE_Y:number = 20;
-    readonly DEFAULT_FIELD_BLOCK_SIZE:number = 50;
     private _playFieldArray: boolean[][]
+    private readonly fieldSize_X: number;
+    private readonly fieldSize_Y: number;
+    private readonly blockSize: number;
 
-    constructor(fieldSize_X: number, fieldSize_Y: number, defaultBlock_Size: number){
-        this.TETRIS_FIELD_SIZE_X = fieldSize_X;
-        this.TETRIS_FIELD_SIZE_Y = fieldSize_Y;
-        this.DEFAULT_FIELD_BLOCK_SIZE = defaultBlock_Size;
+
+    constructor(){
+        this.fieldSize_X = GAME_CONFIG.FIELD_SIZE_X;
+        this.fieldSize_Y = GAME_CONFIG.FIELD_SIZE_Y;
+        this.blockSize = GAME_CONFIG.FIELD_BLOCK_SIZE;
         this._playFieldArray =  this._getEmptyPlayField();
     }
 
     private _getEmptyPlayField(): boolean[][]{
-        const playFieldArray: boolean[][] = Array.from({ length: this.TETRIS_FIELD_SIZE_X },
-             () => Array.from({ length: this.TETRIS_FIELD_SIZE_Y },
+        const playFieldArray: boolean[][] = Array.from({ length: this.fieldSize_X },
+             () => Array.from({ length: this.fieldSize_Y },
             () => false)
         );
+        
         return playFieldArray;
     }
 
     public getArraySize():number[]{
-        return [this.TETRIS_FIELD_SIZE_X, this.TETRIS_FIELD_SIZE_Y]
+        return [this.fieldSize_X, this.fieldSize_Y]
     }
 
     createPlayField(){
         let playFieldMainDiv = document.createElement("div")
-        let windowWidth = this.TETRIS_FIELD_SIZE_X * this.DEFAULT_FIELD_BLOCK_SIZE
-        let windowHeight = this.TETRIS_FIELD_SIZE_Y * this.DEFAULT_FIELD_BLOCK_SIZE
+        let windowWidth = this.fieldSize_X * this.blockSize
+        let windowHeight = this.fieldSize_Y * this.blockSize
         playFieldMainDiv.setAttribute("id", "playField")
         playFieldMainDiv.style.width = windowWidth  + "px"
         playFieldMainDiv.style.height = windowHeight + "px"
@@ -43,7 +45,7 @@ class PlayField{
 
     checkIfLineIsFull(yIndex: number): boolean{
         var lineIsFull = true;
-        for(let i = 0; i < this.TETRIS_FIELD_SIZE_X; i++ ){
+        for(let i = 0; i < this.fieldSize_X; i++ ){
             var playFieldBlock = this._playFieldArray[i][yIndex]
             if(!this._playFieldArray[i][yIndex]){
                 lineIsFull = false;
@@ -54,7 +56,7 @@ class PlayField{
     }
 
     moveLineGivenLinesDown(yIndexOfLineToMove: number, linesToMove: number){
-        for(let i = 0; i < this.TETRIS_FIELD_SIZE_X; i++ ){
+        for(let i = 0; i < this.fieldSize_X; i++ ){
             if(this._playFieldArray[i][yIndexOfLineToMove]){
                 this._playFieldArray[i][yIndexOfLineToMove + linesToMove] = true
                 this._playFieldArray[i][yIndexOfLineToMove] = false
@@ -63,14 +65,14 @@ class PlayField{
     }
 
     clearFullLine(yIndex: number){
-        for(let i = 0; i < this.TETRIS_FIELD_SIZE_X; i++ ){
+        for(let i = 0; i < this.fieldSize_X; i++ ){
             this._playFieldArray[i][yIndex] = false
         }
     }
 
     checkAndReactToFullLines(){
         var fallCounter = 0
-        for(let i = this.TETRIS_FIELD_SIZE_Y-1; i > 0; i--){
+        for(let i = this.fieldSize_Y - 1; i > 0; i--){
             if(this.checkIfLineIsFull(i)){
                 fallCounter = fallCounter + 1
                 this.clearFullLine(i)
@@ -85,26 +87,26 @@ class PlayField{
 
     //Todo: irgendwann mal ändern das der nicht irgendwie die ersten 3 nicht printed...
     printPlayField(){
+        this.createPlayField()
         const playField = document.getElementById("playField")
-        for(let x = 0; x<this.TETRIS_FIELD_SIZE_X; x++ ){
+        for(let x = 0; x<this.fieldSize_X; x++ ){
             const playFieldColumn = document.createElement("div")
-            playFieldColumn.style.width = this.DEFAULT_FIELD_BLOCK_SIZE + "px"
-            playFieldColumn.style.height = (this.DEFAULT_FIELD_BLOCK_SIZE * this.TETRIS_FIELD_SIZE_Y) + "px"
+            playFieldColumn.style.width = this.blockSize + "px"
+            playFieldColumn.style.height = (this.blockSize * this.fieldSize_Y) + "px"
             playFieldColumn.style.display = "inline-block"
             playFieldColumn.setAttribute("id", `${x}`)
-            for(let y = 0; y<this.TETRIS_FIELD_SIZE_Y; y++){
+            for(let y = 0; y<this.fieldSize_Y; y++){
                 const playFieldBlockHtml = document.createElement("div")
                 playFieldBlockHtml?.setAttribute("id", `${x}-${y}`)
                 const fieldParameters = this._playFieldArray[x][y]
-                //Todo: pack into its own function
+                //Todo: maybe change this to the colors set in GameConfig
                 if(this._playFieldArray[x][y]){
-                    //field is taken
                     playFieldBlockHtml.style.backgroundColor = "blue";
                 }else{
                     playFieldBlockHtml.style.backgroundColor = "black"
                 }
-                playFieldBlockHtml.style.width = this.DEFAULT_FIELD_BLOCK_SIZE + "px"
-                playFieldBlockHtml.style.height = this.DEFAULT_FIELD_BLOCK_SIZE + "px"
+                playFieldBlockHtml.style.width = this.blockSize + "px"
+                playFieldBlockHtml.style.height = this.blockSize+ "px"
                 playFieldBlockHtml.style.display = "block"
                 playFieldColumn ?.appendChild(playFieldBlockHtml);
             }
@@ -131,8 +133,8 @@ class PlayField{
     }
 
     checkIfFieldExists(xToCheck: number, yToCheck: number): boolean{
-        return ((xToCheck >= 0) && (xToCheck <= this.TETRIS_FIELD_SIZE_X-1)) && 
-                ((xToCheck >= 0) && (yToCheck <= this.TETRIS_FIELD_SIZE_Y - 1))
+        return ((xToCheck >= 0) && (xToCheck <= this.fieldSize_X - 1)) && 
+                ((yToCheck >= 0) && (yToCheck <= this.fieldSize_Y - 1))
     }
 
     // checks if field exists and is taken
@@ -164,15 +166,14 @@ class PlayField{
 
     setFieldToTaken(x: number, y: number){
         this._playFieldArray[x][y] = true
-        this.renewPlayField()
     }
 
     setFieldToFree(x: number, y: number){
         this._playFieldArray[x][y] = false
-        this.renewPlayField()
     }
 
-    renewPlayField(){
+    // could I maybe also always call this ? instead of print playfield?
+    public redrawPlayField(){
         const playField = document.getElementById("playField")
         if(playField != null && playField != undefined){
             this.removeChildrenElements(playField)

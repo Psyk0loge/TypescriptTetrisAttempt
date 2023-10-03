@@ -3,13 +3,11 @@
  * When you're ready to start on your site, clear the file. Happy hacking!
  **/
 import {PlayField} from "./PlayField"
-import {Controlls} from "./Controlls"
-//import { PlayBlocks } from "./PlayBlocks";
+import {Controlls} from "./GameLogic"
 
 //const PlayerBlock? = <HTMLDivElement>document.getElementById("ballID");
-
-let playField = new PlayField(10,20,50);
-let playControlls = new Controlls(playField);
+let playField = new PlayField();
+let playControlls = new Controlls();
 let playSpeed = 750
 
 
@@ -21,9 +19,8 @@ function setupGame(){
 }
 
 function gameLoop(){
-  //Todo: mal schauen ob ich das wirklich noch brauhce...
   if(!playControlls.playBlockExists()){
-    playControlls.createNewPlayBlock()
+    playControlls.createAndSetNewPlayBlock()
   }
   console.log("now checking for colision")
 
@@ -31,9 +28,8 @@ function gameLoop(){
     console.log("start falling")
     playControlls.move(1, x => [x[0], x[1] + 1])
   } else {
-    // das machen was passieren soll wenn andockt...
     playControlls.checkFullLines()
-    playControlls.createNewPlayBlock()
+    playControlls.createAndSetNewPlayBlock()
     //Punkte Zählen...
   }
 

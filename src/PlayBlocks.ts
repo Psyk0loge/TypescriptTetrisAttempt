@@ -4,18 +4,21 @@ export class PlayBlock {
   //finally found the bug.. since this is static it only exists once meaning that only 4 things can be created in total
   //and ...
   public blockTypes = [
+    //Longboy
     [
       [4, 0],
       [4, 1],
       [4, 2],
       [4, 3],
     ],
+    //square
     [
       [4, 0],
       [4, 1],
       [5, 0],
       [5, 1],
     ],
+    
     [
       [4, 0],
       [4, 1],
@@ -71,9 +74,13 @@ export class PlayBlock {
 
   public blockPositions: number[][];
   private unChecked = true;
+  private blockType: number;
+  private rotationIndex: number;
 
   constructor() {
-    this.blockPositions = this.deepCopyArray(getRandomInt(4));
+    this.blockType = getRandomInt(4)
+    this.blockPositions = this.deepCopyArray(this.blockType);
+    this.rotationIndex = 0;
   }
   
   public getPlayBlocksCheck(blocks: PlayBlock): number[][] {
@@ -138,23 +145,55 @@ export class PlayBlock {
   return resultArray;
 }
 //introduce parameter, that contains max or min...
-getBlocksToCheck(getRelevantIndex: (a: number[]) => number): number[][] {
-  const index0Values = this.blockPositions.map(([index0]) => index0);
-  const lowestIndex0Value = getRelevantIndex(index0Values)
-  const resultArray: number[][] = [];
-  //here the deconstructing leads to: 
-  for (const [index0, index1] of this.blockPositions) {
-      if (index0 === lowestIndex0Value) {
-          resultArray.push([index0, index1]);
-      }
+  getBlocksToCheck(getRelevantIndex: (a: number[]) => number): number[][] {
+    const index0Values = this.blockPositions.map(([index0]) => index0);
+    const lowestIndex0Value = getRelevantIndex(index0Values)
+    const resultArray: number[][] = [];
+    //here the deconstructing leads to: 
+    for (const [index0, index1] of this.blockPositions) {
+        if (index0 === lowestIndex0Value) {
+            resultArray.push([index0, index1]);
+        }
+    }
+
+    return resultArray;
   }
 
-  return resultArray;
-}
+  setBlockPosition(newBlockPositions: number[][]){
+    this.blockPositions = newBlockPositions;
+  }
 
-setBlockPosition(newBlockPositions: number[][]){
-  this.blockPositions = newBlockPositions;
-}
+  rotatePlayblock(){
+    //this.blockPositions
+    //this.blockType
+    const turnFunciton = [
+      [
+        (X0: number): number => X0 = X0 -1,
+        (Y0: number): number => Y0 = Y0 + 1
+      ],
+      [
+        (X1: number): number => X1 = X1,
+        (Y1: number): number => Y1 = Y1
+      ],
+      [
+        (X2: number): number => X2 = X2 + 1,
+        (Y2: number): number => Y2 = Y2 - 1
+      ],
+      [
+        (X3: number): number => X3 = X3,
+        (Y3: number): number => Y3 = Y3 - 2
+      ],
+    ]
+
+    if(this.blockType === 2 && this.rotationIndex === 0){
+      for(let i = 0;i < 4; i++){
+        for(let j = 0; j < 2; j++){
+          var func = turnFunciton[i][j]
+          this.blockPositions[i][j] = func(this.blockPositions[i][j])
+        }
+      }
+    }
+  }
 
 }
 

@@ -2,20 +2,17 @@ import {PlayField} from "./PlayField"
 import { getRandomInt } from "./GetRandomNumber";
 import { PlayBlock } from "./PlayBlocks";
 
-class Controlls{
+class GameLogic{
     private readonly _playField: PlayField;
-
-    public static directions = {
-        Left : 'left',
-        Right : 'right',
-        Up : 'up',
-        Down : 'down',
-    }
-    
-    
 
     private _currentPlayBlock?: PlayBlock
 
+    constructor(){
+        this._playField = new PlayField();
+        window.addEventListener("keydown", e => this.playerBlockControl(e))
+    }
+
+    //Todo: change to only getting input and logic is in other statements...
     playerBlockControl(e : KeyboardEvent){
         e.preventDefault()
         let key = e.key
@@ -45,7 +42,7 @@ class Controlls{
             }
             break
             case "w":
-                this.turnLeft()
+                // this.turnLeft()
                 break;
             }
         }
@@ -56,25 +53,9 @@ class Controlls{
         array[1] = array[1] + 1
         return array
     };
-
-    getFieldSize_X():number {
-        return this._playField.TETRIS_FIELD_SIZE_X
-    }
-
-    getFieldSize_Y():number {
-        return this._playField.TETRIS_FIELD_SIZE_Y
-    }
-
-    getFieldDefaultBlock_Size():number {
-        return this._playField.DEFAULT_FIELD_BLOCK_SIZE
-    }
     
-    constructor(playField: PlayField){
-        this._playField = playField;
-        window.addEventListener("keydown", e => this.playerBlockControl(e))
-    }
-
-    createNewPlayBlock(){
+    //Todo: this should not be in here
+    createAndSetNewPlayBlock(){
         this._currentPlayBlock = new PlayBlock()
     }
 
@@ -85,6 +66,7 @@ class Controlls{
         return true;
     }
 
+    //Should this Logic for checking if there is a collision really be in playField?
     checkCollisionDown(): boolean{
         if(this._currentPlayBlock != null){
             console.log("checking for colision right controller")  
@@ -133,6 +115,7 @@ class Controlls{
             }
             this.blockField(this._currentPlayBlock.blockPositions)
         }
+        this._playField.redrawPlayField();
     }
 
     checkFullLines(){
@@ -140,18 +123,10 @@ class Controlls{
     }
 
     //unclean cause sideeffects
-    turnLeft(){
-        var currentPlayBlockCopy = this._currentPlayBlock?.blockPositions
-        if(currentPlayBlockCopy != undefined){
-
-            var tempArrayOverflowValue = currentPlayBlockCopy[3]
-            for(let i = 1; i < currentPlayBlockCopy.length; i++){
-                currentPlayBlockCopy[i] = currentPlayBlockCopy[i - 1]
-            }
-            currentPlayBlockCopy[0] = tempArrayOverflowValue
-            // this._currentPlayBlock?.blockPositions = currentPlayBlockCopy
-        }
-    }
+    // turnLeft(){
+    //     this._currentPlayBlock?.turnLeft()
+    // }
 
 }
-export { Controlls };
+//Todo: change the naming down here !!!
+export { GameLogic as Controlls };
