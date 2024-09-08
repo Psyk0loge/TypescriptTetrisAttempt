@@ -25,9 +25,9 @@ export default {
     /* ... */
   },
   devOptions: {
-    /* ... */
+    sourceMaps: true,
   },
   buildOptions: {
-    /* ... */
+    sourcemap: true,
   },
 };

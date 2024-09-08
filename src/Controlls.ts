@@ -11,8 +11,6 @@ class Controlls{
         Up : 'up',
         Down : 'down',
     }
-    
-    
 
     private _currentPlayBlock?: PlayBlock
 
@@ -28,7 +26,7 @@ class Controlls{
                     ){
                     //der prüft das Feld auf dem er sich befindet statt das wo er hin soll
                     this.move(1, x => this.erhoeheZweitesElement(x));
-                }
+                } 
                 break
             case "ArrowLeft":  
                 if(!this.checkCollisionDirection(

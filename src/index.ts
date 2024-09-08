@@ -2,8 +2,8 @@
  * This file is just a silly example to show everything working in the browser.
  * When you're ready to start on your site, clear the file. Happy hacking!
  **/
-import {PlayField} from "./PlayField"
-import {Controlls} from "./Controlls"
+import { PlayField } from "./PlayField"
+import { Controlls } from "./Controlls"
 //import { PlayBlocks } from "./PlayBlocks";
 
 //const PlayerBlock? = <HTMLDivElement>document.getElementById("ballID");
@@ -38,7 +38,7 @@ function gameLoop(){
   }
 
   //mit jedem ticken muss der PlayBlock eins runter gehen...
-  //setInterval()
+  playSpeed -=10
 }
 
 setupGame()
